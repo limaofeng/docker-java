@@ -583,12 +583,12 @@ RUN \
 
 # Install JDK 8
 RUN \
-        DIR=/usr/lib/jvm/java-8-openjdk-amd64 && \
+        DIR=/usr/lib/jvm/java-8-openjdk && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://download.oracle.com/java/18/latest/jdk-18_linux-x64_bin.tar.gz && \
-        tar -xz --strip-components=1 -f jdk-18_linux-x64_bin.tar.gz && \
-        rm -rf jdk-18_linux-x64_bin.tar.gz
+        curl -sLO https://github.com/AdoptOpenJDK/openjdk8-upstream-binaries/releases/download/jdk8u322-b06/OpenJDK8U-jre_x64_linux_8u322b06.tar.gz && \
+        tar -xz --strip-components=1 -f OpenJDK8U-jre_x64_linux_8u322b06.tar.gz && \
+        rm -rf OpenJDK8U-jre_x64_linux_8u322b06.tar.gz
 
 ## cleanup
 RUN \
@@ -605,12 +605,12 @@ RUN \
 
 FROM        base AS release
 
-ENV         JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV         JAVA_HOME /usr/lib/jvm/java-8-openjdk
 ENV         LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:$JAVA_HOME:$JAVA_HOME/bin
 ENV         PATH="$LD_LIBRARY_PATH:$PATH"
 
 COPY --from=build /usr/local /usr/local/
-COPY --from=build /usr/lib/jvm/java-8-openjdk-amd64 /usr/lib/jvm/java-8-openjdk-amd64
+COPY --from=build /usr/lib/jvm/java-8-openjdk /usr/lib/jvm/java-8-openjdk
 
 # 设置 app 目录
 WORKDIR /app
