@@ -575,20 +575,20 @@ RUN \
         DIR=/tmp/magick && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://www.imagemagick.org/download/ImageMagick-${IMAGEMAGICK_VERSION}.tar.gz && \
-        tar -xz --strip-components=1 -f ImageMagick-${IMAGEMAGICK_VERSION}.tar.gz && \
+        curl -sLO https://www.imagemagick.org/archive/releases/ImageMagick-${IMAGEMAGICK_VERSION}.tar.xz && \
+        tar -xf ImageMagick-${IMAGEMAGICK_VERSION}.tar.xz --strip-components=1 && \
         ./configure --prefix /usr/local && \
         make install && \
         rm -rf ${DIR}
 
-# Install JDK 8
+# Install JDK 17
 RUN \
-        DIR=/usr/lib/jvm/java-8-openjdk && \
+        DIR=/usr/lib/jvm/java-openjdk17 && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://github.com/AdoptOpenJDK/openjdk8-upstream-binaries/releases/download/jdk8u322-b06/OpenJDK8U-jre_x64_linux_8u322b06.tar.gz && \
-        tar -xz --strip-components=1 -f OpenJDK8U-jre_x64_linux_8u322b06.tar.gz && \
-        rm -rf OpenJDK8U-jre_x64_linux_8u322b06.tar.gz
+        curl -sLO https://github.com/AdoptOpenJDK/openjdk17-binaries/releases/download/jdk-2021-05-07-13-31/OpenJDK-jre_x64_linux_hotspot_2021-05-06-23-30.tar.gz && \
+        tar -xz --strip-components=1 -f OpenJDK-jre_x64_linux_hotspot_2021-05-06-23-30.tar.gz && \
+        rm -rf OpenJDK-jre_x64_linux_hotspot_2021-05-06-23-30.tar.gz
 
 ## cleanup
 RUN \
@@ -605,12 +605,12 @@ RUN \
 
 FROM        base AS release
 
-ENV         JAVA_HOME /usr/lib/jvm/java-8-openjdk
+ENV         JAVA_HOME /usr/lib/jvm/java-openjdk17
 ENV         LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:$JAVA_HOME:$JAVA_HOME/bin
 ENV         PATH="$LD_LIBRARY_PATH:$PATH"
 
 COPY --from=build /usr/local /usr/local/
-COPY --from=build /usr/lib/jvm/java-8-openjdk /usr/lib/jvm/java-8-openjdk
+COPY --from=build /usr/lib/jvm/java-openjdk17 /usr/lib/jvm/java-openjdk17
 
 # 设置 app 目录
 WORKDIR /app
